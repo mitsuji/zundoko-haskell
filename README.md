@@ -2,12 +2,14 @@
 
 ## run
 
-> stack runghc app/Main.hs
+$ stack runghc app/Main.hs
 
 
 ## compile, install and run
 
-> stack build
-> stack install
-> ~/.local/bin/zundoko-haskell-exe
+$ stack build
+
+$ stack install
+
+$ ~/.local/bin/zundoko-haskell-exe
 
