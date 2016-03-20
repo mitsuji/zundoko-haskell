@@ -3,22 +3,15 @@ module Main where
 import qualified System.Random as R
 import Control.Concurrent(threadDelay)
 
-data Call = Zun | Doko deriving(Show,Eq,Bounded)
+data Call = Zun | Doko
+          deriving(Show,Eq,Bounded,Enum)
 
 instance R.Random Call where
   randomR (a,b) g = 
-    case (R.randomR (call2Int a, call2Int b) g) of
-      (x, g') -> (int2Call x, g')
-    where
-      call2Int :: Call -> Int
-      call2Int Zun  = 0
-      call2Int Doko = 1
-      
-      int2Call :: Int -> Call
-      int2Call 0 = Zun
-      int2Call _ = Doko
+    case (R.randomR (fromEnum a, fromEnum b) g) of
+      (x, g') -> (toEnum x, g')
   
-  random g = R.randomR (minBound,maxBound) g
+  random = R.randomR (minBound,maxBound)
 
 
 push :: [Call] -> Call -> [Call]
