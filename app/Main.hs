@@ -3,8 +3,13 @@ module Main where
 import qualified System.Random as R
 import Control.Concurrent(threadDelay)
 
+
 data Call = Zun | Doko
-          deriving(Show,Eq,Bounded,Enum)
+          deriving(Eq,Bounded,Enum)
+
+instance Show Call where
+  show Zun = "Zun!" 
+  show Doko = "Doko!" 
 
 instance R.Random Call where
   randomR (a,b) g = 
@@ -15,8 +20,7 @@ instance R.Random Call where
 
 
 push :: [Call] -> Call -> [Call]
-push xs x = take 5 $ x:xs
-
+push xs x = x : take 4 xs
 
 check :: [Call] -> Bool
 check xs = xs == [Doko, Zun, Zun, Zun, Zun]
@@ -24,16 +28,14 @@ check xs = xs == [Doko, Zun, Zun, Zun, Zun]
 
 main :: IO()
 main = do
-  g <- R.newStdGen
-  loop [] g
+  loop []
   where
-    loop :: R.RandomGen g => [Call] -> g -> IO ()
-    loop xs g = do
-      let (x,g') = R.random g 
-      putStrLn $ show x
-      threadDelay (500 * 1000)
+    loop :: [Call] -> IO ()
+    loop xs = do
+      x <- R.randomIO
+      putStrLn (show x) >> threadDelay (500 * 1000)
       let xs' = push xs x
       if check xs'
         then putStrLn "Kiyoshi!!"
-        else loop xs' g'
+        else loop xs'
              
